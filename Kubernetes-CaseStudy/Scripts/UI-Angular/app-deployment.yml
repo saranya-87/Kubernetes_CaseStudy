@@ -55,4 +55,4 @@ spec:
       targetPort: 80  # port number that container listening on
   selector:
     app: angular-k8s-deployment
-  type: loadBalancer
+  type: LoadBalancer
