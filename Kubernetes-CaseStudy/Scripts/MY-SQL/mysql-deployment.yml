@@ -52,7 +52,7 @@ spec:
         tier: database
     spec:
       containers:
-      - image: mysql:5.7 # image from docker-hub
+      - image: mysql:5.6 # image from docker-hub
         args:
           - "--ignore-db-dir=lost+found" # Workaround for https://github.com/docker-library/mysql/issues/186
         name: mysql 
