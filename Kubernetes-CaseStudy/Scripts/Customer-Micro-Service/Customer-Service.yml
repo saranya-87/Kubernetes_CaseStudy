@@ -45,44 +45,45 @@ spec:
         app: springboot-k8s-cust-mysql
     spec:
       containers:
-        - name: springboot-k8s-cust-mysql
-          image: thulasi29ndocker/customer-service:2.0 #dockerhub image
-          ports:
-            - containerPort: 8080
+      - name: springboot-k8s-cust-mysql
+        image: thulasi29ndocker/customer-service:2.0 #dockerhub image
+        ports:
+          - containerPort: 8080
               # Autoscaling
+        resources:
           limits: # Memory and CPU limits  for the container
             cpu: 500m # CPU limit in millicores
-            requests: # Memory limit  in bytes
-              cpu: 200m # CPU limit   in millicores
-          env:   # Setting Enviornmental Variables
-          - name: DB_HOST   # Setting Database host address from configMap
-            valueFrom: 
+          requests: # Memory limit  in bytes
+            cpu: 200m # CPU limit   in millicores
+        env:   # Setting Enviornmental Variables
+        - name: DB_HOST   # Setting Database host address from configMap
+          valueFrom: 
               configMapKeyRef:
                 name: db-conf  # name of configMap
                 key: host
-          - name: DB_NAME  # Setting Database name from configMap
-            valueFrom:
+        - name: DB_NAME  # Setting Database name from configMap
+          valueFrom:
               configMapKeyRef:
                 name: db-conf 
                 key: name
-          - name: DB_USERNAME  # Setting Database username from Secret
-            valueFrom:
+        - name: DB_USERNAME  # Setting Database username from Secret
+          valueFrom:
               secretKeyRef:
                 name: db-credentials # Secret Name
                 key: username
-          - name: DB_PASSWORD # Setting Database password from Secret
-            valueFrom:
+        - name: DB_PASSWORD # Setting Database password from Secret
+          valueFrom:
               secretKeyRef:
                 name: db-credentials
                 key: password     
           #volumeMounts: # Mounting the volume
-            volumeMounts:
-              - name: mycust-pv-claim # name of the PVC
-                mountPath: /usr/local/cust/data # Mounting the volume
+        volumeMounts:
+          - name: mycust-pv-claim # name of the PVC
+            mountPath: /usr/local/cust/data # Mounting the volume
             #volumes: # Volumes
-          volumes:
-            - name: mycust-pv-claim # name of the PVC
-              persistentVolumeClaim:
-                claimName: mycust-pv-claim # name of the PVC
+      volumes:
+        - name: mycust-pv-claim # name of the PVC
+          persistentVolumeClaim:
+            claimName: mycust-pv-claim # name of the PVC
 
 
