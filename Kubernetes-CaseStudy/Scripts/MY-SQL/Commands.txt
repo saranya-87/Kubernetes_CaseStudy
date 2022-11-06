@@ -1,0 +1,33 @@
+# deploy my-sql-root-credentials
+kubectl apply -f my-sql-root-credentials.yml # This will create a secret with the name my-sql-root-credentials
+
+# deploy my-sql-credentials
+kubectl apply -f my-sql-credentials.yml # This will create a secret with the name my-sql-credentials
+
+# deploy my-sql-config
+kubectl apply -f my-sql-config.yml # This will create a config-map with the name my-sql-config
+
+# deploy my-sql-deployment
+kubectl apply -f my-sql-deployment.yml # This will create a deployment with the name my-sql-deployment
+
+# deploy application
+kubectl apply -f application.yml # This will create a deployment with the name application
+
+# get my-sql-deployment
+kubectl get deployment my-sql-deployment # This will get the deployment with the name my-sql-deployment
+
+# get services
+kubectl get services # This will get the services
+
+#get logs
+kubectl logs deployment/my-sql-deployment # This will get the logs of the deployment with the name my-sql-deployment
+
+# get volumes mount
+kubectl get volumes # This will get the volumes
+
+#get persistent volumes
+kubectl get pv # This will get the persistent volumes
+
+
+
+

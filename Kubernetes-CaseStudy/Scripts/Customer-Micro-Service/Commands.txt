@@ -1,0 +1,30 @@
+# Building Docker File for Customer Service
+docker login # Login to Docker Hub
+docker build -t thulasi29ndocker/customer-service:2.0 . # Build Docker Image
+docker images # List Docker Images
+docker push thulasi29ndocker/customer-service:2.0 # Push Docker Image to Docker Hub
+
+# Deploying Application
+kubectl apply -f application.yml  # Deploying Application
+# Deploying Customer Service
+kubectl apply -f customer-service.yml # Deploying Customer Service
+
+# Checking Deployment Status
+kubectl get pods # Listing Pods
+
+# Checking Customer Service Status
+kubectl get services # Listing Services
+
+# Checking Customer Service Endpoints
+kubectl get endpoints # Listing Endpoints
+
+# get URL of Customer Service
+kubectl get services | grep springboot-k8s-acnt-mysql # Listing Services
+
+# minikube command to get URL of Customer Service
+minikube service springboot-k8s-acnt-mysql --url    # http://192.168.147.163:30160/
+
+# get logs of Customer Service
+kubectl logs -f $(kubectl get pods -o go-template --template '{{range .items}}{{.metadata.name}}{{"\n"}}{{end}}')
+
+

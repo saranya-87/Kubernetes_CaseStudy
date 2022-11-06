@@ -1,0 +1,53 @@
+# 1. Update enviroment.ts file, customer_base_url: to http://192.168.147.163:30160/ and account_base_url: to http://192.168.156.179:30161/
+# update default.conf file
+location /api/customer {
+            proxy_pass http://192.168.147.163:30160/;
+        }
+#   location /api/account {
+            proxy_pass http://192.168.156.179:30161/
+        }
+#login into docker
+docker login
+#build docker image
+docker build -t thulasi29ndocker/my-angular-app:latest .
+#push docker image to docker hub
+docker push thulasi29ndocker/my-angular-app:latest
+#deploy docker image to kubernetes
+kubectl apply -f app-deployment.yml
+
+# get the deployment status
+kubectl get deployment
+
+#get the pod status
+kubectl get pods
+
+#get the service status
+kubectl get service
+
+# get the ingress status
+kubectl get ingress #this is the ingress that is created by the deployment
+
+#get service ip of application
+kubectl get service my-angular-app-service -o jsonpath='{.spec.clusterIP}'
+
+#get the ingress ip
+kubectl get ingress my-angular-app-ingress -o jsonpath='{.spec.rules[0].host}'
+
+#get the service -l app=angular-k8s-deployment
+kubectl get service -l app=angular-k8s-deployment
+
+# describe the service angular-k8s-service
+kubectl describe service angular-k8s-service
+
+OUTPUT:
+##########################################################################################
+NAME                  TYPE              CLUSTER_IP       EXTERNAL-IP    PORT(S)     AGE
+
+angular-k8s-service    Loadbalancer     10.16.247.161    192.168.117.139  80:30170/TCP       45s
+##########################################################################################
+
+# run the application using the external-ip with port 30170
+http://192.168.117.139
+
+
+

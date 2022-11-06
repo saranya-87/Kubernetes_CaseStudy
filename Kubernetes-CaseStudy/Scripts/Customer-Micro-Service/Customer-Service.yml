@@ -1,0 +1,88 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: springboot-k8s-cust-mysql # name of the service
+  labels:
+    name: springboot-k8s-cust-mysql
+spec:
+  ports:
+    - nodePort: 30160 # port number
+      port: 8080
+      targetPort: 8080
+      protocol: TCP
+  selector:           
+    app: springboot-k8s-cust-mysql # name of the deployment
+  type: NodePort       
+
+---
+# Define a 'Persistent Voulume Claim'(PVC) for Mysql Storage, dynamically provisioned by cluster
+apiVersion: v1
+kind: PersistentVolumeClaim # type of the object
+metadata:
+  name: mycust-pv-claim # name of PVC essential for identifying the storage data
+  labels:
+    app: springboot-k8s-cust-mysql
+    tier: application
+spec:
+  accessModes:
+    - ReadWriteOnce   #This specifies the mode of the claim that we are trying to create.
+  resources:
+    requests:
+      storage: 1Gi    #This will tell kubernetes about the amount of space we are trying to claim.
+---
+apiVersion: apps/v1 
+kind: Deployment     # kind of the deployment
+metadata:              
+  name: springboot-k8s-cust-mysql
+spec:                
+  selector:         
+    matchLabels:
+      app: springboot-k8s-cust-mysql
+  replicas: 2 # Number of desired replicas
+  template:
+    metadata:
+      labels:        
+        app: springboot-k8s-cust-mysql
+    spec:
+      containers:
+        - name: springboot-k8s-cust-mysql
+          image: thulasi29ndocker/customer-service:2.0 #dockerhub image
+          ports:
+            - containerPort: 8080
+              # Autoscaling
+          limits: # Memory and CPU limits  for the container
+            cpu: 500m # CPU limit in millicores
+            requests: # Memory limit  in bytes
+              cpu: 200m # CPU limit   in millicores
+          env:   # Setting Enviornmental Variables
+          - name: DB_HOST   # Setting Database host address from configMap
+            valueFrom: 
+              configMapKeyRef:
+                name: db-conf  # name of configMap
+                key: host
+          - name: DB_NAME  # Setting Database name from configMap
+            valueFrom:
+              configMapKeyRef:
+                name: db-conf 
+                key: name
+          - name: DB_USERNAME  # Setting Database username from Secret
+            valueFrom:
+              secretKeyRef:
+                name: db-credentials # Secret Name
+                key: username
+          - name: DB_PASSWORD # Setting Database password from Secret
+            valueFrom:
+              secretKeyRef:
+                name: db-credentials
+                key: password     
+          #volumeMounts: # Mounting the volume
+            volumeMounts:
+              - name: mycust-pv-claim # name of the PVC
+                mountPath: /usr/local/cust/data # Mounting the volume
+            #volumes: # Volumes
+          volumes:
+            - name: mycust-pv-claim # name of the PVC
+              persistentVolumeClaim:
+                claimName: mycust-pv-claim # name of the PVC
+
+
