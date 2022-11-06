@@ -42,7 +42,6 @@ spec:
     requests:
       storage: 1Gi    #This will tell kubernetes about the amount of space we are trying to claim.
 ---
-
 apiVersion: v1
 kind: Service
 metadata:
@@ -54,6 +53,6 @@ spec:
     - nodePort: 30170 # make the service available to network requests from external clients
       port: 80        # access the service via external port no
       targetPort: 80  # port number that container listening on
-    selector:
+  selector:
     app: angular-k8s-deployment
   type: loadBalancer
