@@ -58,7 +58,7 @@ spec:
     spec:
       containers:
       - name: springboot-k8s-cust-mysql
-        image: thulasi29ndocker/customer-service:2.0 #dockerhub image
+        image: ziedyazidi/catalog-service #dockerhub image
         ports:
           - containerPort: 8080
               # Autoscaling
